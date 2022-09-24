@@ -10,11 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
-from email.policy import default
 from pathlib import Path
 import os
 from datetime import timedelta
-from decouple import config
 import dj_database_url 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
