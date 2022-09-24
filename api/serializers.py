@@ -14,7 +14,7 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 class ProfileSerializer(serializers.ModelSerializer):
-    created_on = serializers.DateTimeField(format="%Y-%m-%d", read_only=True)
+    created_on = serializers.DateTimeField(format="%Y-%m-%d-%H-%M-%S", read_only=True)
     class Meta:
         model=Profile
         fields = ('id', 'nickName', 'userProfile', 'created_on', 'img')
