@@ -18,7 +18,7 @@ platformdirs==2.5.2
 PyJWT==2.4.0
 python-decouple==3.3
 pytz==2020.5
-sqlparse==0.4.1
+sqlparse==0.4.2
 static3==0.7.0
 virtualenv==20.16.5
 virtualenv-clone==0.5.7
