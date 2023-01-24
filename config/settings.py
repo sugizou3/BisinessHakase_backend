@@ -15,8 +15,15 @@ import os
 from datetime import timedelta
 import dj_database_url 
 
+import environ  #render用追加項目
+from decouple import config  #render用追加項目
+from dj_database_url import parse as dburl  #render用追加項目
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
+
+env = environ.Env()  #render用追加項目
+env.read_env(os.path.join(BASE_DIR,".env"))  #render用追加項目
 
 
 # Quick-start development settings - unsuitable for production
@@ -29,7 +36,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', default='local_secret_here')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'RENDER' not in os.environ
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
@@ -60,6 +67,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    #'whitenoise.middleware.security.SecurityMiddleware', #render用追加項目
+    'django.middleware.security.SecurityMiddleware',
 ]
 
 CORS_ORIGIN_WHITELIST = [
@@ -85,7 +94,6 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'config.wsgi.application'
 
 
 REST_FRAMEWORK = {
@@ -110,15 +118,20 @@ default_dburl = 'sqlite:///' + str(BASE_DIR / "db.sqlite3")
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-if DEBUG:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
-else:
-    DATABASES = {"default": dj_database_url.config()}
+
+# if DEBUG:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.sqlite3',
+#             'NAME': BASE_DIR / 'db.sqlite3',
+#         }
+#     }
+# else:
+#     DATABASES = {"default": dj_database_url.config()}
+
+DATABASES = {
+    'default': config("DATABASE_URL",default=default_dburl,cast=dburl),
+}
 
 
 # Password validation
@@ -158,8 +171,12 @@ AUTH_USER_MODEL = 'api.User'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
 STATIC_ROOT = str(BASE_DIR / 'staticfiles')
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+SUPERUSER_EMAIL =env("SUPERUSER_EMAIL")
+SUPERUSER_PASSWORD =env("SUPERUSER_PASSWORD")
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
