@@ -75,7 +75,6 @@ CORS_ORIGIN_WHITELIST = [
     "http://localhost:3000", "https://bisiness-hakase-frontend-8dam.vercel.app"
 ]
 
-
 ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [

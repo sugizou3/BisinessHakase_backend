@@ -5,7 +5,6 @@ from . import serializers
 from .models import Profile, Post, Comment
 from .serializers import UserSerializer, PostSerializer, ProfileSerializer, CommentSerializer
 
-
 class CreateUserView(generics.CreateAPIView):
     serializer_class = UserSerializer
     permission_classes = (AllowAny,)
