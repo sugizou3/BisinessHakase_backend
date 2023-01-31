@@ -12,7 +12,7 @@ services:
     env: python
     region: singapore
     branch: main
-    healthCheckPath: /
+    healthCheckPath: /admin/
     buildCommand: "./build.sh"
     startCommand: "gunicorn config.wsgi:application"
     envVars:
