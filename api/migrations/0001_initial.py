@@ -62,6 +62,7 @@ class Migration(migrations.Migration):
                 ('text', models.CharField(max_length=200)),
                 ('post', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.post')),
                 ('userComment', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='userComment', to=settings.AUTH_USER_MODEL)),
+                ('created_on', models.DateTimeField(auto_now_add=True)),
             ],
         ),
     ]
