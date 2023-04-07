@@ -6,16 +6,16 @@ from .models import Profile, Post, Comment
 from .serializers import UserSerializer, PostSerializer, ProfileSerializer, CommentSerializer
 from rest_framework import permissions
 
-class IsAdminOrReadOnly(permissions.BasePermission):
-    """管理者以外読み取り専用"""
+class IsActiveOrReadOnly(permissions.BasePermission):
+    """アカウント取得者以外読み取り専用"""
 
     def has_permission(self, request, view):
         """GET, HEAD, OPTIONS は常に許可"""
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        # 管理者のみすべて許可
-        return request.user.is_superuser
+        # アカウント取得者のみすべて許可
+        return request.user.is_active
 
 
 
@@ -27,7 +27,7 @@ class CreateUserView(generics.CreateAPIView):
 class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
-    # permission_classes = [IsAdminOrReadOnly] 
+    permission_classes = [IsActiveOrReadOnly] 
 
     def perform_create(self, serializer):
         serializer.save(userProfile=self.request.user)
@@ -43,7 +43,7 @@ class MyProfileListView(generics.ListAPIView):
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    
+    permission_classes = [IsActiveOrReadOnly]
     
 
     def perform_create(self, serializer):
@@ -52,18 +52,18 @@ class PostViewSet(viewsets.ModelViewSet):
 class PostListView(generics.ListAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = (IsAdminOrReadOnly,)
+    permission_classes = (IsActiveOrReadOnly,)
 
 
 class PostRetrieveView(generics.RetrieveAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = (IsAdminOrReadOnly,)
+    permission_classes = (IsActiveOrReadOnly,)
 
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = [IsAdminOrReadOnly] 
+    permission_classes = [IsActiveOrReadOnly] 
 
     def perform_create(self, serializer):
         serializer.save(userComment=self.request.user)

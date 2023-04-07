@@ -38,20 +38,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 
-
-class Profile(models.Model):
-    nickName = models.CharField(max_length=20)
-    userProfile = models.OneToOneField(
-        settings.AUTH_USER_MODEL, related_name='userProfile',
-        on_delete=models.CASCADE
-    )
-    created_on = models.DateTimeField(auto_now_add=True)
-    img = models.ImageField(blank=True, null=True, upload_to=upload_avatar_path)
-
-    def __str__(self):
-        return self.nickName
-
-
 class Post(models.Model):
     userPost = models.ForeignKey(
         settings.AUTH_USER_MODEL, related_name='userPost',
@@ -66,6 +52,23 @@ class Post(models.Model):
 
     def __str__(self):
         return self.main
+
+
+class Profile(models.Model):
+    nickName = models.CharField(max_length=20)
+    userProfile = models.OneToOneField(
+        settings.AUTH_USER_MODEL, related_name='userProfile',
+        on_delete=models.CASCADE
+    )
+    created_on = models.DateTimeField(auto_now_add=True)
+    img = models.ImageField(blank=True, null=True, upload_to=upload_avatar_path)
+    download = models.ManyToManyField(Post,related_name='download',blank=True)
+
+    def __str__(self):
+        return self.nickName
+
+
+
 
 
 class Comment(models.Model):
