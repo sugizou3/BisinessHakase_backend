@@ -70,6 +70,20 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 
 
+class SearchListView(generics.ListAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    permission_classes = (AllowAny,)
+
+    def get_queryset(self):
+        queryset = Post.objects.all()
+        main = self.request.query_params.get('main', None)
+        if main is not None:
+            queryset = queryset.filter(main__icontains=main)
+        return queryset
+
+
+
 
 
 

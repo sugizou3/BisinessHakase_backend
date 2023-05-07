@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from .models import Profile, Post, Comment
+from .models import Profile, Post, Comment,Dictionary,SearchInfo
 
 class UserSerializer(serializers.ModelSerializer):
 
@@ -33,3 +33,20 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = ('id', 'text', 'userComment','post','created_on')
         extra_kwargs = {'userComment': {'read_only': True}}
+
+class DictionarySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Dictionary
+        fields = ('id','text')
+
+class SearchInfoSerializer(serializers.ModelSerializer):
+    created_on = serializers.DateTimeField(format="%Y/%m/%d %H:%M:%S", read_only=True)
+    class Meta:
+        model = SearchInfo
+        fields = ('id','user','count','text','created_on')
+
+
+
+
+
+

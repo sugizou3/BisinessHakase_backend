@@ -36,6 +36,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+    
+class Dictionary(models.Model):
+    text = models.TextField(max_length=20)
+
 
 
 class Post(models.Model):
@@ -43,19 +47,20 @@ class Post(models.Model):
         settings.AUTH_USER_MODEL, related_name='userPost',
         on_delete=models.CASCADE
     )
-    main = models.CharField(max_length=100)
-    booktitle = models.CharField(max_length=60)
-    author = models.CharField(max_length=30)
-    sub = models.CharField(max_length=400)
+    main = models.TextField(max_length=100)
+    booktitle = models.TextField(max_length=60)
+    author = models.TextField(max_length=30)
+    sub = models.TextField(max_length=400)
     created_on = models.DateTimeField(auto_now_add=True)
     good = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='good',blank=True)
+    word = models.ManyToManyField(Dictionary, related_name='word',blank=True)
 
     def __str__(self):
         return self.main
 
 
 class Profile(models.Model):
-    nickName = models.CharField(max_length=20)
+    nickName = models.TextField(max_length=20)
     userProfile = models.OneToOneField(
         settings.AUTH_USER_MODEL, related_name='userProfile',
         on_delete=models.CASCADE
@@ -67,12 +72,16 @@ class Profile(models.Model):
     def __str__(self):
         return self.nickName
 
-
+class SearchInfo(models.Model):
+    user = models.ManyToManyField(Profile, related_name='searchUser',blank=True)
+    count = models.PositiveSmallIntegerField(default=0)
+    text = models.ManyToManyField(Dictionary, related_name='searchText',blank=True)
+    created_on = models.DateTimeField(auto_now_add=True)
 
 
 
 class Comment(models.Model):
-    text = models.CharField(max_length=200)
+    text = models.TextField(max_length=200)
     userComment = models.ForeignKey(
         settings.AUTH_USER_MODEL, related_name='userComment',
         on_delete=models.CASCADE
@@ -82,3 +91,17 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.text
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
