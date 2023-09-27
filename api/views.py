@@ -2,9 +2,14 @@ from rest_framework import generics
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
 from . import serializers
-from .models import Profile, Post, Comment
+from .models import Profile, Post, Comment,Dictionary
 from .serializers import UserSerializer, PostSerializer, ProfileSerializer, CommentSerializer
 from rest_framework import permissions
+from gensim import models
+from rest_framework.decorators import action
+from rest_framework.response import Response 
+from rest_framework import status
+from .search import getImportantWords,passDictionary
 
 class IsActiveOrReadOnly(permissions.BasePermission):
     """アカウント取得者以外読み取り専用"""
@@ -39,6 +44,11 @@ class MyProfileListView(generics.ListAPIView):
     def get_queryset(self):
         return self.queryset.filter(userProfile=self.request.user)
 
+    
+    
+
+
+
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
@@ -47,8 +57,14 @@ class PostViewSet(viewsets.ModelViewSet):
     
 
     def perform_create(self, serializer):
-        serializer.save(userPost=self.request.user)
-
+        netdata = self.request.data
+        data = netdata.copy()
+        text = data["main"]+" "+data['sub']+" "+data['author']+" "+data['booktitle']
+        words = getImportantWords(text=text,wordBoolean=False)
+        word_ids = passDictionary(words)
+        serializer.save(userPost=self.request.user,word=word_ids)
+    
+    
 class PostListView(generics.ListAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
@@ -77,10 +93,19 @@ class SearchListView(generics.ListAPIView):
 
     def get_queryset(self):
         queryset = Post.objects.all()
+        # dictionary = Dictionary.objects.all()
+        # print(dictionary)
         main = self.request.query_params.get('main', None)
-        if main is not None:
-            queryset = queryset.filter(main__icontains=main)
+        if main:
+            words = getImportantWords(text=main,wordBoolean=False)
+            word_ids = passDictionary(words)
+
+            for id in word_ids:
+                queryset = queryset.filter(word__in=[id])
+
         return queryset
+    
+
 
 
 
