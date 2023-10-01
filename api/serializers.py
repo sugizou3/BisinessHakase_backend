@@ -44,10 +44,11 @@ class DictionarySerializer(serializers.ModelSerializer):
         fields = ('id','text')
 
 class SearchInfoSerializer(serializers.ModelSerializer):
-    created_on = serializers.DateTimeField(format="%Y/%m/%d %H:%M:%S", read_only=True)
+    searched_on = serializers.DateTimeField(format="%Y/%m/%d %H:%M:%S", read_only=True)
     class Meta:
         model = SearchInfo
-        fields = ('id','user','count','text','created_on')
+        fields = ('id','user','count','text','searched_on')
+        extra_kwargs = {'user': {'read_only': True}}
 
 
 

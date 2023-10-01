@@ -47,10 +47,10 @@ class Post(models.Model):
         settings.AUTH_USER_MODEL, related_name='userPost',
         on_delete=models.CASCADE
     )
-    main = models.TextField(max_length=100)
-    booktitle = models.TextField(max_length=60)
-    author = models.TextField(max_length=30)
-    sub = models.TextField(max_length=400)
+    main = models.TextField(max_length=150)
+    booktitle = models.TextField(max_length=80)
+    author = models.TextField(max_length=40)
+    sub = models.TextField(max_length=800)
     created_on = models.DateTimeField(auto_now_add=True)
     good = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='good',blank=True)
     word = models.ManyToManyField(Dictionary, related_name='word',blank=True)
@@ -76,7 +76,7 @@ class SearchInfo(models.Model):
     user = models.ManyToManyField(Profile, related_name='searchUser',blank=True)
     count = models.PositiveSmallIntegerField(default=0)
     text = models.ManyToManyField(Dictionary, related_name='searchText',blank=True)
-    created_on = models.DateTimeField(auto_now_add=True)
+    searched_on = models.DateTimeField(auto_now=True)
 
 
 

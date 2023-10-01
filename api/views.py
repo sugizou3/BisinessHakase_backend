@@ -2,8 +2,8 @@ from rest_framework import generics
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
 from . import serializers
-from .models import Profile, Post, Comment,Dictionary
-from .serializers import UserSerializer, PostSerializer, ProfileSerializer, CommentSerializer
+from .models import Profile, Post, Comment,Dictionary,SearchInfo
+from .serializers import UserSerializer,DictionarySerializer, PostSerializer, ProfileSerializer, CommentSerializer,SearchInfoSerializer
 from rest_framework import permissions
 from gensim import models
 from rest_framework.decorators import action
@@ -63,6 +63,17 @@ class PostViewSet(viewsets.ModelViewSet):
         words = getImportantWords(text=text,wordBoolean=False)
         word_ids = passDictionary(words)
         serializer.save(userPost=self.request.user,word=word_ids)
+        # dataWords = data.getlist("word")
+        # if dataWords ==[]:
+        #     text = data["main"]+" "+data['sub']+" "+data['author']+" "+data['booktitle']
+        #     words = getImportantWords(text=text,wordBoolean=False)
+        #     print("return")
+        #     word_ids = passDictionary(words)
+        # else:
+        #     word_ids = passDictionary(dataWords)
+        #     print("pass")
+        #     serializer.save(userPost=self.request.user,word=word_ids)
+    # def update(self, serializer):
     
     
 class PostListView(generics.ListAPIView):
@@ -92,21 +103,42 @@ class SearchListView(generics.ListAPIView):
     permission_classes = (AllowAny,)
 
     def get_queryset(self):
+        print(self.request.user)
         queryset = Post.objects.all()
-        # dictionary = Dictionary.objects.all()
-        # print(dictionary)
         main = self.request.query_params.get('main', None)
+        userId = self.request.query_params.get('userId', None)
+        data = SearchInfo.objects.all()
+        print(main)
         if main:
             words = getImportantWords(text=main,wordBoolean=False)
             word_ids = passDictionary(words)
+            # serializer = SearchInfoSerializer(data={})
+            # serializer.is_valid()
+            # serializer.save(user=userId,count=0,text = word_ids)
 
             for id in word_ids:
+                if data.filter(text=id).exists():
+                   monoData = SearchInfo.object.get(text=id)
+                    
+
                 queryset = queryset.filter(word__in=[id])
 
         return queryset
     
 
+# class DictionaryListView(generics.ListAPIView):
+#     queryset = Dictionary.objects.all()
+#     serializer_class = DictionarySerializer
+#     permission_classes = (AllowAny,)
+    
 
+class DictionaryViewSet(viewsets.ModelViewSet):
+    queryset = Dictionary.objects.all()
+    serializer_class = DictionarySerializer
+    permission_classes = [IsActiveOrReadOnly] 
+
+    # def perform_create(self, serializer):
+    #     serializer.save(userProfile=self.request.user)
 
 
 
