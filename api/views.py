@@ -6,7 +6,7 @@ from . import serializers
 from .models import Profile, Post, Comment,Dictionary,SearchInfo
 from .serializers import UserSerializer,DictionarySerializer, PostSerializer, ProfileSerializer, CommentSerializer,SearchInfoSerializer
 from rest_framework import permissions
-# from gensim import models
+from gensim import models
 from rest_framework.decorators import action
 from rest_framework.response import Response 
 from rest_framework import status
