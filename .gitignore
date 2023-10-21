@@ -6,3 +6,4 @@ db-volumes/
 db.sqlite3
 media
 .env
+build.sh
