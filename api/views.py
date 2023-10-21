@@ -1,5 +1,6 @@
 from rest_framework import generics
 from rest_framework import viewsets
+from rest_framework.decorators import api_view
 from rest_framework.permissions import AllowAny
 from . import serializers
 from .models import Profile, Post, Comment,Dictionary,SearchInfo
@@ -44,11 +45,6 @@ class MyProfileListView(generics.ListAPIView):
     def get_queryset(self):
         return self.queryset.filter(userProfile=self.request.user)
 
-    
-    
-
-
-
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
@@ -63,17 +59,6 @@ class PostViewSet(viewsets.ModelViewSet):
         words = getImportantWords(text=text,wordBoolean=False)
         word_ids = passDictionary(words)
         serializer.save(userPost=self.request.user,word=word_ids)
-        # dataWords = data.getlist("word")
-        # if dataWords ==[]:
-        #     text = data["main"]+" "+data['sub']+" "+data['author']+" "+data['booktitle']
-        #     words = getImportantWords(text=text,wordBoolean=False)
-        #     print("return")
-        #     word_ids = passDictionary(words)
-        # else:
-        #     word_ids = passDictionary(dataWords)
-        #     print("pass")
-        #     serializer.save(userPost=self.request.user,word=word_ids)
-    # def update(self, serializer):
     
     
 class PostListView(generics.ListAPIView):
@@ -103,22 +88,29 @@ class SearchListView(generics.ListAPIView):
     permission_classes = (AllowAny,)
 
     def get_queryset(self):
-        print(self.request.user)
         queryset = Post.objects.all()
         main = self.request.query_params.get('main', None)
         userId = self.request.query_params.get('userId', None)
-        data = SearchInfo.objects.all()
-        print(main)
+        searchInfo = SearchInfo.objects.all()
         if main:
             words = getImportantWords(text=main,wordBoolean=False)
             word_ids = passDictionary(words)
-            # serializer = SearchInfoSerializer(data={})
-            # serializer.is_valid()
-            # serializer.save(user=userId,count=0,text = word_ids)
 
             for id in word_ids:
-                if data.filter(text=id).exists():
-                   monoData = SearchInfo.object.get(text=id)
+                if searchInfo.filter(text=id).exists():
+                   searchInfo = searchInfo.filter(text=id)
+                   if searchInfo.filter(user=userId).exists():
+                    data = SearchInfo.objects.get(text=id,user=userId)
+                    data.count = data.count+1
+                    data.save()
+                   else:
+                    info = SearchInfo.objects.create(count=1)
+                    info.user.set(userId)
+                    info.text.set([id])
+                else:
+                    info = SearchInfo.objects.create(count=1)
+                    info.user.set(userId)
+                    info.text.set([id])
                     
 
                 queryset = queryset.filter(word__in=[id])
@@ -126,22 +118,25 @@ class SearchListView(generics.ListAPIView):
         return queryset
     
 
-# class DictionaryListView(generics.ListAPIView):
-#     queryset = Dictionary.objects.all()
-#     serializer_class = DictionarySerializer
-#     permission_classes = (AllowAny,)
-    
-
 class DictionaryViewSet(viewsets.ModelViewSet):
     queryset = Dictionary.objects.all()
     serializer_class = DictionarySerializer
-    permission_classes = [IsActiveOrReadOnly] 
-
-    # def perform_create(self, serializer):
-    #     serializer.save(userProfile=self.request.user)
+    permission_classes = [AllowAny] 
 
 
+class SearchInfoViewSet(viewsets.ModelViewSet):
+    queryset = SearchInfo.objects.all()
+    serializer_class = SearchInfoSerializer
+    permission_classes = [AllowAny] 
 
+
+@api_view(['GET', 'POST']) # 引数としてHTTPメソッドを指定
+def textToId(request):
+    if request.method == 'POST':
+        words = getImportantWords(text=request.data["word"],wordBoolean=False)
+        word_id = passDictionary(words)
+        return Response(word_id)
+    return Response({"message": "Hello, world!"})
 
 
 

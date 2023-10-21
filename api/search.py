@@ -220,6 +220,11 @@ def getImportantWords(text,wordBoolean = True):
     else:
         x = min(len(text_weights_token),15)
         text = [r[0] for r in text_weights_token[0:x]]
+
+    for i in range(len(text)):
+        if text[i].isalpha():
+            text[i] =  text[i].lower()
+
     return text
 
 def passDictionary(words):
