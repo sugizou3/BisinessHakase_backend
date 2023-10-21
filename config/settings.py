@@ -67,7 +67,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    #'whitenoise.middleware.security.SecurityMiddleware', #render用追加項目
+    'whitenoise.middleware.security.SecurityMiddleware', #render用追加項目
     'django.middleware.security.SecurityMiddleware',
 ]
 
