@@ -27,3 +27,4 @@ whitenoise==6.3.0
 janome==0.4.2
 gensim==3.8.3
 chardet==4.0.0
+render==1.0.0
