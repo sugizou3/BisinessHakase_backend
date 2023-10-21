@@ -9,7 +9,7 @@ services:
   - type: web
     name: BisinessHakase
     plan: free
-    env: python
+    env: python3
     region: singapore
     branch: main
     healthCheckPath: /admin/
