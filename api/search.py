@@ -79,7 +79,7 @@ def load_dictionary_and_corpus(dic_file, corpus_file):
     return dic, bows
 
 def load_aozora_corpus():
-    return load_dictionary_and_corpus('./media/aozora.dic','./media/aozora.mm')
+    return load_dictionary_and_corpus('media/aozora.dic','media/aozora.mm')
 
 # def load_aozora_corpus():
 #     dic = np.load(
