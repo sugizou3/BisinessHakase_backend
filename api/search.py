@@ -10,7 +10,10 @@ from gensim import corpora,models
 import chardet
 import copy
 from .models import Profile, Post, Comment,Dictionary
+from config.settings import BASE_DIR
+import os
 
+# PRIVATE_DIR = getattr(settings, "PRIVATE_DIR", None)
 def get_string_from_file(filename):
     with open(filename, 'rb') as f:
         d = f.read()
@@ -72,6 +75,7 @@ def bows_to_cfs(bows):
     return cfs
 
 def load_dictionary_and_corpus(dic_file, corpus_file):
+    print("dicfile",dic_file)
     dic = corpora.Dictionary.load(dic_file)
     bows = list(corpora.MmCorpus(corpus_file))
     if not hasattr(dic, 'cfs'):
@@ -79,7 +83,7 @@ def load_dictionary_and_corpus(dic_file, corpus_file):
     return dic, bows
 
 def load_aozora_corpus():
-    return load_dictionary_and_corpus('media/aozora.dic','media/aozora.mm')
+    return load_dictionary_and_corpus(os.path.join(BASE_DIR, 'api/static/aozora/aozora.dic'),os.path.join(BASE_DIR, 'api/static/aozora/aozora.mm'))
 
 # def load_aozora_corpus():
 #     dic = np.load(

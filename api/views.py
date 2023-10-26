@@ -59,7 +59,7 @@ class PostViewSet(viewsets.ModelViewSet):
         words = getImportantWords(text=text,wordBoolean=False)
         word_ids = passDictionary(words)
         serializer.save(userPost=self.request.user,word=word_ids)
-        serializer.save(userPost=self.request.user)
+        # serializer.save(userPost=self.request.user)
     
     
 class PostListView(generics.ListAPIView):
