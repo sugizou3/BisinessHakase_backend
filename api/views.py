@@ -53,12 +53,12 @@ class PostViewSet(viewsets.ModelViewSet):
     
 
     def perform_create(self, serializer):
-        # netdata = self.request.data
-        # data = netdata.copy()
-        # text = data["main"]+" "+data['sub']+" "+data['author']+" "+data['booktitle']
-        # words = getImportantWords(text=text,wordBoolean=False)
-        # word_ids = passDictionary(words)
-        # serializer.save(userPost=self.request.user,word=word_ids)
+        netdata = self.request.data
+        data = netdata.copy()
+        text = data["main"]+" "+data['sub']+" "+data['author']+" "+data['booktitle']
+        words = getImportantWords(text=text,wordBoolean=False)
+        word_ids = passDictionary(words)
+        serializer.save(userPost=self.request.user,word=word_ids)
         serializer.save(userPost=self.request.user)
     
     
