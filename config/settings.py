@@ -34,12 +34,10 @@ SECRET_KEY = os.environ.get('SECRET_KEY', default='local_secret_here')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = 'RENDER' not in os.environ
+DEBUG = False #os.environ.get('DEBUG'),
 
-ALLOWED_HOSTS = ["*"]
-RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
-if RENDER_EXTERNAL_HOSTNAME:
-    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+# ALLOWED_HOSTS = [os.environ.get('ALLOWED_HOSTS')]
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -72,7 +70,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ORIGIN_WHITELIST = [
-    "http://localhost:3000", "https://bisiness-hakase-frontend.vercel.app"
+    "http://localhost:3000", "https://bisiness-hakase-frontend.vercel.app","http://172.17.0.1:3000"
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -116,24 +114,33 @@ SIMPLE_JWT = {
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-default_dburl = 'sqlite:///' + str(BASE_DIR / "db.sqlite3")
+# default_dburl = 'sqlite:///' + str(BASE_DIR / "db.sqlite3")
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-# if DEBUG:
-#     DATABASES = {
-#         'default': {
-#             'ENGINE': 'django.db.backends.sqlite3',
-#             'NAME': BASE_DIR / 'db.sqlite3',
-#         }
-#     }
-# else:
-#     DATABASES = {"default": dj_database_url.config()}
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('POSTGRES_DB'),
+            'USER': os.environ.get('POSTGRES_USER'),
+            'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+            'HOST': 'db',
+            'PORT': 5432,
+        }
+    }
 
-DATABASES = {
-    'default': config("DATABASE_URL",default=default_dburl,cast=dburl),
-}
+# DATABASES = {
+#     'default': config("DATABASE_URL",default=default_dburl,cast=dburl),
+# }
 
 
 # Password validation
@@ -155,8 +162,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/3.1/topics/i18n/
 
 LANGUAGE_CODE = 'ja'
 
@@ -170,8 +175,7 @@ USE_TZ = True
 
 
 AUTH_USER_MODEL = 'api.User'
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.1/howto/static-files/
+
 
 STATIC_URL = 'static/'
 STATIC_ROOT = str(BASE_DIR / 'static')
