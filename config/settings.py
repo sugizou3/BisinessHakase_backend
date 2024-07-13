@@ -34,7 +34,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', default='local_secret_here')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False #os.environ.get('DEBUG'),
+DEBUG = True #os.environ.get('DEBUG'),
 
 # ALLOWED_HOSTS = [os.environ.get('ALLOWED_HOSTS')]
 ALLOWED_HOSTS = []
