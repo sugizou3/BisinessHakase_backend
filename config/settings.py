@@ -37,7 +37,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', default='local_secret_here')
 DEBUG = True #os.environ.get('DEBUG'),
 
 # ALLOWED_HOSTS = [os.environ.get('ALLOWED_HOSTS')]
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['bisinesshakase-backend.onrender.com/', '0.0.0.0', 'localhost']
 
 # RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 # if RENDER_EXTERNAL_HOSTNAME:
