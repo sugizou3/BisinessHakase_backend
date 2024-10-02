@@ -17,7 +17,7 @@ import dj_database_url
 
 import environ  #render用追加項目
 from decouple import config  #render用追加項目
-from dj_database_url import parse as dburl  #render用追加項目
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -76,7 +76,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ORIGIN_WHITELIST = [
-    "http://localhost:3000", "https://bisiness-hakase-frontend.vercel.app","http://172.17.0.1:3000"
+    "http://localhost:3000", "https://bisiness-hakase-frontend.vercel.app"
 ]
 
 ROOT_URLCONF = 'config.urls'
