@@ -1,6 +1,7 @@
 set -o errexit
 
 pip install -r requirements.txt
+pip install -U pip
 
 python manage.py makemigrations
 python manage.py migrate
