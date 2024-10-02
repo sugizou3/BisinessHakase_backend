@@ -1,7 +1,8 @@
 set -o errexit
 
+pip install --upgrade pip
 pip install -r requirements.txt
-pip install -U pip
+
 
 python manage.py makemigrations
 python manage.py migrate
